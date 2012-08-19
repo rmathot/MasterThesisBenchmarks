@@ -1,0 +1,145 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Precomputation benchmarks (prime fields multiplications)</title>
+<script language="JavaScript" type="text/javascript" src="Prime/jsbn.js"></script>
+<script language="JavaScript" type="text/javascript"
+	src="Prime/jsbn2.js"
+></script>
+<script language="JavaScript" type="text/javascript"
+	src="Binary/BinaryScalar.js"
+></script>
+<script language="JavaScript" type="text/javascript" src="OEF/OEF.js"></script>
+<script language="JavaScript" type="text/javascript"
+	src="ECC/eccunique.js"
+></script>
+<script language="JavaScript" type="text/javascript"
+	src="tests/testPrimes.js"
+></script>
+<script language="JavaScript" type="text/javascript"
+	src="tests/testBinary.js"
+></script>
+<script language="JavaScript" type="text/javascript"
+	src="tests/testOEF.js"
+></script>
+<script language="JavaScript" type="text/javascript"
+	src="tests/testECCP2011.js"
+></script>
+<script language="JavaScript" type="text/javascript"
+	src="tests/testECCOEF.js"
+></script>
+<script language="JavaScript" type="text/javascript">
+<!--
+	function init() {
+		// Do nothing for now
+		return;
+	}
+
+	function do_test_precomputationLive() {
+		
+		var j, start, stop, winsize, duree, points_number, tmp, live, hard, best, index;
+		
+		// Lecture des nombres à tester
+		points_number = document.precomputingTest.pts.value;
+		
+		// Cosmétique: remplissage de la 1ere colonne
+		document.getElementById("title").childNodes[0].nodeValue = points_number;
+		
+		// Best
+		best = 1000000;
+		for(index = 5; index < 16; index++){
+			document.getElementById("w" + index).style.backgroundColor = "LightSalmon";
+		}
+		index = -1;
+		
+		// Lancement du test
+		start = new Date().getTime();
+		
+			
+		// Test pour chaque taille de fenêtre
+		for (winsize = 5; winsize < 16; winsize++) {
+
+				// Test du précalcul en live en jacobienne
+				live = testpointmultprime2Jacob(points_number, winsize);
+				tmp = "" + live;
+			
+				if (live < best){
+					best = live;
+					index = winsize;
+				}
+				
+				// Mise à jour des valeurs dans le tableau
+				document.getElementById("w" + winsize).childNodes[0].nodeValue = tmp;
+		}
+		stop = new Date().getTime();
+		duree = (stop - start) / 1000;
+		
+		document.getElementById("test_time").childNodes[0].nodeValue = duree
+				+ " secondes";
+		
+		//Cosmétique
+		if (index != -1) {
+			document.getElementById("w" + index).style.backgroundColor = "GreenYellow";
+		}
+
+		
+		return;
+	}
+</script>
+</head>
+<body onLoad='init();'>
+	<h1>Precomputation benchmarks (prime fields multiplications)</h1>
+	Precomputing in jacobian - Window size determination
+	<form name="precomputingTest" onSubmit='return false;'>
+		<input type="button" value="Benchmark it!"
+			onClick="do_test_precomputationLive();"
+		>
+		<p>
+			Number of mults = <input name="pts" type="text"
+				value="10" size=4
+			>
+		</p>
+		<table border="1">
+			<thead>
+				<tr>
+					<th>Nbr of mults \ Window size</th>
+					<th>5</th>
+					<th>6</th>
+					<th>7</th>
+					<th>8</th>
+					<th>9</th>
+					<th>10</th>
+					<th>11</th>
+					<th>12</th>
+					<th>13</th>
+					<th>14</th>
+					<th>15</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="title">&nbsp;</td>
+					<!-- le &nbsp; permet d'afficher correctement la ligne du 
+					tableau, sinon il croit que toute la ligne est vide et 
+					n'affiche rien de bien -->
+					<td id="w5">&nbsp;</td>
+					<td id="w6">&nbsp;</td>
+					<td id="w7">&nbsp;</td>
+					<td id="w8">&nbsp;</td>
+					<td id="w9">&nbsp;</td>
+					<td id="w10">&nbsp;</td>
+					<td id="w11">&nbsp;</td>
+					<td id="w12">&nbsp;</td>
+					<td id="w13">&nbsp;</td>
+					<td id="w14">&nbsp;</td>
+					<td id="w15">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			<b>Full testing time: <span id="test_time"> </span></b>
+		</p>
+		<p>NB: Times (in µs) are averages of 10 tests.</p>
+	</form>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<html>
+<head>
+<script src="jsbn.js"></script>
+<script src="jsbn2.js"></script>
+<script src="OEF.js"></script>
+<script src="ecc.js"></script>
+<title>Tests on ECC on OEF's</title>
+</head>
+<body>
+<script type="text/javascript">
+//
+var p2 = BigInteger.ONE.shiftLeft(224).add(BigInteger.ONE.shiftLeft(140)).add(BigInteger.ONE.shiftLeft(56)).add(BigInteger.ONE);
+var tabJ = new Array();
+var tabA = new Array();
+var i;
+for(i=0;i<10;i++){tabJ[i]=randEcPoint('curve','jacobian','field',0)};
+for(i=0;i<11;i++){tabA[i]=randEcPoint('curve','affine','field',0)};
+//
+//
+var nb = 2000;
+//~ testadd(nb);
+
+//~ testdoubling(nb);
+testmultavecpre(nb/10);
+//
+//
+function testadd(nb){
+var indice,z7,end7,start7,time7;
+start7=new Date().getTime();
+for(indice=nb;indice;indice--){
+z7=tabJ[0].add(tabA[1]);
+z7=tabJ[1].add(tabA[2]);
+z7=tabJ[2].add(tabA[3]);
+z7=tabJ[3].add(tabA[4]);
+z7=tabJ[4].add(tabA[5]);
+z7=tabJ[5].add(tabA[6]);
+z7=tabJ[6].add(tabA[7]);
+z7=tabJ[7].add(tabA[8]);
+z7=tabJ[8].add(tabA[9]);
+z7=tabJ[9].add(tabA[10]);
+}
+end7=new Date().getTime();
+time7=end7-start7;
+document.write("<br/>");
+document.write('addition in µs : '+1000*time7/(nb*10));
+}
+function testdoubling(nb){
+var i,z,end,start,time;
+start=new Date().getTime();
+for(i=nb;i;i--){
+z=tabJ[0].dobble();
+z=tabJ[1].dobble();
+z=tabJ[2].dobble();
+z=tabJ[3].dobble();
+z=tabJ[4].dobble();
+z=tabJ[5].dobble();
+z=tabJ[6].dobble();
+z=tabJ[7].dobble();
+z=tabJ[8].dobble();
+z=tabJ[9].dobble();
+}
+end=new Date().getTime();
+time=end-start;
+document.write("<br/>");
+document.write('doubling in µs : '+1000*time/(nb*10));
+}
+function testmultavecpre(nb){
+var i,z,end,start,time,k,P,w;
+k=randBigInt(100).mod(p2);
+P = randEcPoint('curve','jacobian','field',p2);
+w = 8;
+var precomp = precomputeComb2(k,P,w);
+start=new Date().getTime();
+for(i=nb;i;i--){
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+z=P.multiply(k,w,precomp);
+}
+end=new Date().getTime();
+time=end-start;
+document.write("<br/>");
+document.write('multiplication with precomp in ms : '+time/(nb*10));
+}
+
+</script>
+</body>
+</html>
